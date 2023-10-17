@@ -1,32 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Text-to-Speech Converter</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Voice to Text</title>
 </head>
 <body>
-    <h1>Text-to-Speech Converter</h1>
-    <textarea id="text-input" placeholder="Enter text to convert to speech"></textarea>
-    <button id="speak-button">Speak</button>
-    <div id="spoken-text"></div>
+    <button id="startRecording">Start Recording</button>
+    <button id="stopRecording">Stop Recording</button>
+    <p id="result"></p>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const textInput = document.getElementById("text-input");
-            const speakButton = document.getElementById("speak-button");
-            const spokenText = document.getElementById("spoken-text");
-            const synth = window.speechSynthesis;
-        
-            speakButton.addEventListener("click", function () {
-                const text = textInput.value;
-                const utterance = new SpeechSynthesisUtterance("text");
-        
-                synth.speak(utterance);
-        
-                utterance.onend = function () {
-                    spokenText.textContent = "Speech complete: " + text;
-                };
+        const startRecordingButton = document.getElementById("startRecording");
+        const stopRecordingButton = document.getElementById("stopRecording");
+        const resultElement = document.getElementById("result");
+        let recognition;
+
+        if ("webkitSpeechRecognition" in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = function(event) {
+                let interimTranscript = "";
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        resultElement.innerHTML = event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                // You can display interim results in real-time if needed
+                // interimResultsElement.innerHTML = interimTranscript;
+            };
+
+            startRecordingButton.addEventListener("click", function() {
+                recognition.start();
             });
-        });
+
+            stopRecordingButton.addEventListener("click", function() {
+                recognition.stop();
+            });
+        } else {
+            resultElement.innerHTML = "Your browser does not support the Web Speech API.";
+        }
     </script>
 </body>
 </html>
