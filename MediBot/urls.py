@@ -33,7 +33,8 @@ urlpatterns = [
     path('text_bard', text_bard, name='text_bard'),
     path('add_text', add_text_entry, name='add_text_entry'),
 ]
+from django.conf.urls.static import static
+from MediBot import settings
 
-
-urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
