@@ -10,3 +10,4 @@ nltk==3.8.1
 requests==2.31.0
 bardapi==0.1.38
 markdown==3.4.3
+googlesearch-python
