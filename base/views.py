@@ -18,7 +18,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import markdown
 from .models import TextEntry
-
+from django.http import FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
@@ -252,6 +252,13 @@ def upload_image(request):
         else:
             return JsonResponse({'content': "<span style='color:red'> Something went worng while getting image input."}, status=400)
 
+
+from MediBot.settings import BASE_DIR
+import os
+def download_file(request):
+    file_path =  os.path.join(BASE_DIR,'CodelessDev.apk') # Replace 'file_field' with the name of your file field
+    response = FileResponse(open(file_path, 'rb'))
+    return response
 
 
 # try:
