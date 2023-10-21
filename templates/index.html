@@ -673,6 +673,7 @@ https://templatemo.com/tm-590-topic-listing
                             
 {% comment %} -------------------------------------------------------------------------------------------------------------------- {% endcomment %}
                             {% csrf_token %}
+                            <!-- Start voice input button -->
                             <input type="file" id="imageInput" style="width: 200px; height: 30px; background-color: #f0f0f0; border: 1px solid; background: #5757573d; padding: 5px; border-radius: 9px; margin: 1px 10px; height: 41px;">
 {% comment %} ---------------------------------------------------------------------------- {% endcomment %}
                             <!-- User input box -->
@@ -684,8 +685,9 @@ https://templatemo.com/tm-590-topic-listing
                                 </div>
       
                                 <div class="chat-bar-icons">
-                                    <i id="chat-icon" style="color: crimson;" class="fa fa-fw fa-heart"
-                                        onclick="heartButton()"></i>
+                                    <button id="startButton" style="    padding: 0px 7px;
+                                    border-radius: 14px;"><i id="voiceInputIcon" class="fas fa-microphone"></i></button>
+
                                     <i id="chat-icon" style="color: #333;" class="fa fa-fw fa-send"
                                         onclick="sendButton()"></i>
                                 </div>
@@ -718,6 +720,40 @@ https://templatemo.com/tm-590-topic-listing
         <script src=" {% static 'js/click-scroll.js' %} "></script>
         <script src=" {% static 'js/custom.js' %} "></script>
         <script>
+            const textInput1 = document.getElementById('textInput');
+            const startButton = document.getElementById('startButton');
+            
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+    
+                recognition.continuous = false;
+                recognition.lang = 'en-US';
+    
+                recognition.onresult = (event) => {
+                    const result = event.results[event.resultIndex];
+                    const transcript = result[0].transcript;
+                    textInput1.value = transcript;
+                };
+    
+                startButton.addEventListener('click', () => {
+                    recognition.start();
+                    startButton.disabled = true;
+                    textInput1.value = '';
+                    textInput1.placeholder = 'Listening...';
+                });
+    
+                recognition.onend = () => {
+                    startButton.disabled = false;
+                    textInput1.placeholder = 'Speak here...';
+                };
+            } else {
+                alert('Speech recognition is not supported by your browser. Please use a compatible browser.');
+            }
+
+
+
+
             function speech(text_con) {
                 // This function can be called from your HTML or other JavaScript code.
                 const synth = window.speechSynthesis;
@@ -838,6 +874,7 @@ https://templatemo.com/tm-590-topic-listing
                   content.placeholder = "Content updated"
             }
         }
+
 
           </script>
     </body>

@@ -1,46 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Voice to Text</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Input</title>
 </head>
 <body>
-    <button id="startRecording">Start Recording</button>
-    <button id="stopRecording">Stop Recording</button>
-    <p id="result"></p>
+    <h1>Voice Input to Text Field</h1>
+    
+    <!-- Text input field -->
+    <input type="text" id="textInput" placeholder="Speak here...">
+
+    <!-- Start voice input button -->
+    <button id="startButton">Start Voice Input</button>
 
     <script>
-        const startRecordingButton = document.getElementById("startRecording");
-        const stopRecordingButton = document.getElementById("stopRecording");
-        const resultElement = document.getElementById("result");
-        let recognition;
+        const textInput = document.getElementById('textInput');
+        const startButton = document.getElementById('startButton');
+        
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
 
-        if ("webkitSpeechRecognition" in window) {
-            recognition = new webkitSpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
 
-            recognition.onresult = function(event) {
-                let interimTranscript = "";
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    if (event.results[i].isFinal) {
-                        resultElement.innerHTML = event.results[i][0].transcript;
-                    } else {
-                        interimTranscript += event.results[i][0].transcript;
-                    }
-                }
-                // You can display interim results in real-time if needed
-                // interimResultsElement.innerHTML = interimTranscript;
+            recognition.onresult = (event) => {
+                const result = event.results[event.resultIndex];
+                const transcript = result[0].transcript;
+                textInput.value = transcript;
             };
 
-            startRecordingButton.addEventListener("click", function() {
+            startButton.addEventListener('click', () => {
                 recognition.start();
+                startButton.disabled = true;
+                textInput.value = '';
+                textInput.placeholder = 'Listening...';
             });
 
-            stopRecordingButton.addEventListener("click", function() {
-                recognition.stop();
-            });
+            recognition.onend = () => {
+                startButton.disabled = false;
+                textInput.placeholder = 'Speak here...';
+            };
         } else {
-            resultElement.innerHTML = "Your browser does not support the Web Speech API.";
+            alert('Speech recognition is not supported by your browser. Please use a compatible browser.');
         }
     </script>
 </body>
