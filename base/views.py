@@ -240,7 +240,7 @@ def upload_image(request):
         if image and text:
             # Read the image data
             image_data = image.read()
-
+            print(image_data)
             # Use Bard API to analyze the image and text
             image_analysis = bard.ask_about_image(text, image_data)
 
