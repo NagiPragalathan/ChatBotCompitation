@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from base.views import home, about, chatbot_res, login_form,signup,logout1,upload_image,text_bard, add_text_entry,download_file
+from base.views import home, about, chatbot_res,update_qa, login_form,signup,logout1,upload_image,text_bard, add_text_entry,download_file
 
 from django.conf.urls.static import static
 from MediBot import settings
@@ -32,7 +32,8 @@ urlpatterns = [
     path('upload_image', upload_image, name='upload_image'),
     path('text_bard', text_bard, name='text_bard'),
     path('add_text', add_text_entry, name='add_text_entry'),
-     path('download', download_file, name='download_file')
+     path('download', download_file, name='download_file'),
+     path('update-qa', update_qa, name='update_qa'),
 ]
 
 from django.conf.urls.static import static

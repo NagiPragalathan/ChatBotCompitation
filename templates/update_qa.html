@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update QA</title>
+</head>
+<body>
+    <h1>Update QA</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="question">Question:</label>
+        <input type="text" name="question" required><br>
+
+        <label for="answer">Answer:</label>
+        <input type="text" name="answer" required><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

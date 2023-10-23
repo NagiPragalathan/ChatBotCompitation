@@ -17,7 +17,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import markdown
-from .models import TextEntry
+from .models import TextEntry, QA
 from django.http import FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -27,6 +27,19 @@ try:
 except:
     print("Error while connecting with API.")
 
+
+def update_qa(request):
+    if request.method == 'POST':
+        # Get the data from the HTML form
+        question = request.POST['question']
+        answer = request.POST['answer']
+        
+        qa = QA(question=question, answer=answer)
+        qa.save()
+        return redirect('update_qa')
+
+
+    return render(request, 'update_qa.html')
 
 
 def signup(request):
@@ -78,6 +91,7 @@ conversation = {"hello":["hello","hey, hello how can i help you"],"who are you":
   <li><img src="" alt="pic "<a href="https://github.com/MohanKumarMurugan">Mohan Kumar</a></li>
 </ul>
 ''']}
+
 # Define synonyms for common question words
 synonyms = {"what": ["what", "which", "where", "when", "how"],
             "is": ["is", "are", "am", "was", "were", "be", "being", "been"]}
@@ -154,6 +168,11 @@ def get_answer_from_given_link(question_url):
 # Process user input and generate an appropriate response
 def respond_to_input(user_input):
     # Check if input matches a conversation keyword
+    qa_data = QA.objects.all()
+    qa_dict = {}
+    for qa in qa_data:
+        qa_dict[qa.question] = [qa.answer]
+    conversation.update(qa_dict)    
     for key in conversation:
         if user_input.lower() == key:
             return random.choice(conversation[key])
