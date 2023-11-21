@@ -70,6 +70,8 @@ TEMPLATES = [
     },
 ]
 
+X_FRAME_OPTIONS = 'ALLOWALL'
+
 WSGI_APPLICATION = 'MediBot.wsgi.application'
 
 
