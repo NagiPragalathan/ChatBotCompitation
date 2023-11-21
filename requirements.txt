@@ -11,3 +11,7 @@ requests==2.31.0
 bardapi==0.1.38
 markdown==3.4.3
 googlesearch-python
+ 
+
+django-cors-headers==3.8.0
+django-cors-headers
